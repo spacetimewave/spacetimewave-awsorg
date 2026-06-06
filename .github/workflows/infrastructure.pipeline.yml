@@ -1,0 +1,91 @@
+name: infrastructure.pipeline
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'infrastructure/**'
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_ROLE_ARN: arn:aws:iam::543634431649:role/pipeline-oidc-role
+  AWS_REGION: eu-west-1
+  OPENTOFU_WORKING_DIR: infrastructure
+  OPENTOFU_ENVIRONMENT_FILE: prod.tfvars
+  OPENTOFU_PLAN_FILE: prod.tfplan
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+
+      - name: Init
+        run: tofu init -var-file="${{ env.OPENTOFU_ENVIRONMENT_FILE }}"
+        working-directory: ${{ env.OPENTOFU_WORKING_DIR }}
+
+      - name: Validate
+        run: tofu validate
+        working-directory: ${{ env.OPENTOFU_WORKING_DIR }}
+
+      - name: Plan
+        run: tofu plan -var-file="${{ env.OPENTOFU_ENVIRONMENT_FILE }}" -out="${{ env.OPENTOFU_PLAN_FILE }}"
+        working-directory: ${{ env.OPENTOFU_WORKING_DIR }}
+
+      - name: Upload plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: prod-plan
+          path: ${{ env.OPENTOFU_WORKING_DIR }}/${{ env.OPENTOFU_PLAN_FILE }}
+          retention-days: 1
+
+  apply:
+    needs: plan
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Download plan
+        uses: actions/download-artifact@v4
+        with:
+          name: prod-plan
+          path: ${{ env.OPENTOFU_WORKING_DIR }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+
+      - name: Init
+        run: tofu init -var-file="${{ env.OPENTOFU_ENVIRONMENT_FILE }}"
+        working-directory: ${{ env.OPENTOFU_WORKING_DIR }}
+
+      - name: Apply
+        run: tofu apply -auto-approve "${{ env.OPENTOFU_PLAN_FILE }}" 
+        working-directory: ${{ env.OPENTOFU_WORKING_DIR }}
