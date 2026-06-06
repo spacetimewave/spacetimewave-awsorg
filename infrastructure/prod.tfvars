@@ -1,0 +1,3 @@
+aws_region = "eu-west-1"
+otf_state_s3_bucket_name = "spacetimewave-awsorg-otf-prod-euwest1-s3"
+otf_state_s3_file_name = "spacetimewave/aws/org/terraform.tfstate"
