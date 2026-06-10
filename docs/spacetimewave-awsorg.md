@@ -1,0 +1,1 @@
+![Logo](./assets/spacetimewave-awsorg.svg)
