@@ -1,19 +1,32 @@
 # Spacetimewave AWS Organization
 
-This repository creates and manages **spacetimewave** AWS infrastructure: AWS Organization, sub-accounts and IAM.
+This repository creates and manages **spacetimewave** AWS infrastructure: AWS Organization, Organizational Units, AWS sub-accounts and IAM.
 
 ## Repository
 
-The mono-repository structure is the following:
+The repository structure is the following:
 
 ```
-montajes-lucho
+spacetimewave-awsorg
+├── .claude
+│   └── ...
 ├── .github
-│   └── infrastructure.pipeline.yml
-└── infrastructure
-    └── ...
+│   └── workflows
+│       ├── infrastructure.pipeline.yml
+│       └── ...
+├── docs
+│   └── ...
+|
+├── infrastructure
+│   ├── .terraform
+│   |   └── ...
+|   |
+│   ├── modules
+│   |   └── ...
+|   |
+│   └── ...
 ```
 
 - The infrastructure uses OpenTofu and AWS, and all its code is in the "/infrastructure" folder.
 
-- The infrastructure pipeline is a GitHub Action under the "/.github" folder.
+- The infrastructure pipeline is a GitHub Action under the "/.github/workflows" folder.
