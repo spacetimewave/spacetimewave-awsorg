@@ -13,3 +13,11 @@ variable "github_repository" {
 
 variable "github_repository_branch" {}
 
+variable "root_account_email" {
+  description = "Root-user email for the root AWS account. Must be globally unique across all AWS accounts."
+}
+
+variable "julmosport_account_email" {
+  description = "Root-user email for julmosport AWS accounts. Must be globally unique across all AWS accounts."
+}
+
