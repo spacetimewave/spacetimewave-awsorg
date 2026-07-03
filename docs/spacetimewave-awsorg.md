@@ -104,6 +104,12 @@ resource "aws_organizations_account" "myproduct_prod" {
 
 Follow the same variable/tfvars/PR steps as above.
 
+## Deploying infrastructure into an account
+
+This repository only manages the AWS Organization, OUs, and accounts themselves — it does not deploy workloads *into* those accounts. Once an account exists (see above), the actual infrastructure for that account (e.g. `julmosport-web-prod`) is typically managed from its own separate OpenTofu project/repository, using credentials scoped to that account.
+
+At a high level, that project follows the same pattern as this one: OpenTofu provider/backend config, per-environment `.tfvars` files, and an `init` → `plan` → `apply` workflow, optionally automated by a pipeline. See [`otf.md`](./otf.md) for detailed step-by-step instructions to follow when setting one up (prerequisites, local vs. remote state, plan/apply/destroy).
+
 ## Outputs
 
 `infrastructure/outputs.tf` exposes the OU and root IDs (`organization_root_id`, `workloads_ou_id`, `workloads_external_ou_id`, `workloads_internal_ou_id`, `customers_ou_id`). Account and client-OU-specific IDs aren't output by default — look them up via the AWS Organizations console, or add an output for them following the existing pattern if you need to reference them elsewhere.
