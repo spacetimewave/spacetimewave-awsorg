@@ -1,5 +1,9 @@
+# --------------------------------------------- #
+# --------------- AWS + OpenTofu -------------- #
+# --------------------------------------------- #
+
 variable "aws_region" {
-  default = "eu-north-1"
+  default = "eu-west-1"
 }
 
 variable "otf_state_s3_bucket_name" {}
@@ -12,6 +16,10 @@ variable "github_repository" {
 }
 
 variable "github_repository_branch" {}
+
+# --------------------------------------------- #
+# ------------------ Project ------------------ #
+# --------------------------------------------- #
 
 variable "root_account_email" {
   description = "Root-user email for the root AWS account. Must be globally unique across all AWS accounts."

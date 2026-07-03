@@ -76,7 +76,7 @@ $ aws --version
     $ aws configure
     AWS Access Key ID [****************RKCT]: AKIAX5EZDD2QXNBO5I5V
     AWS Secret Access Key [****************jYx6]: ...
-    Default region name [eu-north-1]: eu-north-1                              
+    Default region name [eu-north-1]: eu-west-1                              
     Default output format [None]: json
     ```
 
