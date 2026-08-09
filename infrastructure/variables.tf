@@ -13,7 +13,10 @@ variable "otf_state_s3_file_name" {}
 
 variable "github_repository" {
   description = "GitHub repository allowed to assume the OIDC pipeline role."
-  default     = "spacetimewave/spacetimewave-awsorg"
+}
+
+variable "github_repository_with_id" {
+  description = "GitHub repository immutable subject claim prefix for OIDC. Check repository settings > Actions > OIDC: \"org@org_id/repo@repo_id\"."
 }
 
 variable "github_repository_branch" {}
